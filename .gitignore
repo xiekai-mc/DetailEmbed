@@ -1,0 +1,10 @@
+*.png
+*.jpg
+*.jpeg
+*.zip
+!images/*.png
+__pycache__
+projects
+build
+dist
+*.spec
