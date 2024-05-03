@@ -1,7 +1,7 @@
+from src import EmbedParams, embed_images_to_large_image
 from PyQt5 import QtWidgets, QtGui, QtCore
-from src.ui import Ui_MainWindow
-from src.embed_images import embed_image_to_large_image
 import cv2
+from src import Ui_MainWindow, EmbedParams, embed_image_to_large_image
 
 
 class DraggableLabel(QtWidgets.QLabel):
@@ -168,8 +168,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # print(f"n: {self.n}")
 
         edge_pixels = self.spinBox.value()
-        self.real_main_image = embed_image_to_large_image(self.real_main_image, self.real_embed_image, 0, edge_pixels, ([
-                                                          self.embed_relative_center_x, self.embed_relative_center_y], self.n))
+
+        params = EmbedParams(small_edge_cut=0, corrosion=edge_pixels, mask_center_and_scale=([
+            self.embed_relative_center_x, self.embed_relative_center_y], self.n),
+            use_corner_matching=self.radioButton.isChecked())
+        self.real_main_image = embed_image_to_large_image(
+            self.real_main_image, self.real_embed_image, params)
 
         cv2.imwrite(".temp.png", self.real_main_image)
         self.readMainImage(".temp.png")
